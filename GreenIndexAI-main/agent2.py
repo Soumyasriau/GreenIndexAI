@@ -10,7 +10,7 @@ def answer_followup_question(user_query: str, context: str) -> str:
         return "No data available. Please run a query first so I can use the results to answer your question."
 
     headers = {
-    "Authorization": f"Bearer {os.getenv('PERPLEXITY_API_KEY')}",
+    "Authorization": f"Bearer {os.getenv('GROQ_API_KEY') or __import__('streamlit').secrets['GROQ_API_KEY']}",
     "Content-Type": "application/json",
 }
 
@@ -34,10 +34,10 @@ Answer:
 
     try:
         response = requests.post(
-            "https://api.perplexity.ai/chat/completions",
+            "https://api.groq.com/openai/v1/chat/completions",
             headers=headers,
             json={
-                "model": "sonar-reasoning",
+                "model": "llama-3.3-70b-versatile",
                 "messages": [{"role": "user", "content": prompt}],
                 "temperature": 0.5,
             },
@@ -60,3 +60,4 @@ Answer:
 
     except Exception as e:
         raise Exception(f"Error during LLM follow-up response: {e}")
+

@@ -8,7 +8,7 @@ import re
 load_dotenv()
 def query_llm(user_input, ndvi_json_data):
     headers = {
-    "Authorization": f"Bearer {os.getenv('PERPLEXITY_API_KEY')}",
+    "Authorization": f"Bearer {os.getenv('GROQ_API_KEY') or __import__('streamlit').secrets['GROQ_API_KEY']}",
     "Content-Type": "application/json",
 }
 
@@ -37,10 +37,10 @@ Only output this JSON. No explanation.
 """
 
     response = requests.post(
-        "https://api.perplexity.ai/chat/completions",
+        "https://api.groq.com/openai/v1/chat/completions",
         headers=headers,
         json={
-            "model": "sonar",
+            "model": "llama-3.3-70b-versatile",
             "messages": [{"role": "user", "content": prompt}],
         },
     )
@@ -67,3 +67,4 @@ Only output this JSON. No explanation.
 
     except Exception as ex:
         raise Exception(f"Error parsing LLM response: {ex}\nRaw output:\n{message}")
+
